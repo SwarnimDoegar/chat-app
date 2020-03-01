@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chat Page</title>
+  <link type="text/css" rel="stylesheet" href="./style.css">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div id="chatHistory"></div>
+  <div class="mesaageInputAndSend">
+    <textarea name="messageInputField" id="messageInputField" cols="30" rows="1"></textarea>
+    <button type="submit" id="sendBtn">Send</button>
+  </div>
+  <div class="logout">
+    <form action="/logout" method="post">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+  <div id="scripting"></div>
+  <script>
+    let socketscript = document.createElement("script");
+    socketscript.src = `http://${window.location.hostname}:3000/socket.io/socket.io.js`;
+    document.getElementById("scripting").appendChild(socketscript);
+    window.history.forward(1);
+  </script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script>
+    window.onbeforeunload = function () {
+      $.get('/sesion/destroy');
+    }
+  </script>
+  <script type="text/javascript" src="./app.js"></script>
+</body>
+
+</html>
