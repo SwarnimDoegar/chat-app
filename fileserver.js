@@ -2,6 +2,7 @@ let http = require('http');
 let express = require('express');
 let session = require('express-session');
 let { myip } = require('./getip');
+let cors = require('cors');
 let router = express.Router();
 let bodyParser = require('body-parser');
 let app = express();
@@ -16,7 +17,9 @@ app.use(bodyParser.json());
 app.use(session({ secret: 'abcd' }));
 app.use(express.static(__dirname + 'public'));
 app.use(cookieParser());
+app.use(cors());
 app.use(router);
+
 
 function parseCookies(req) {
     let ReqCookie = req.headers.cookie;

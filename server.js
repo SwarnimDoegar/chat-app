@@ -1,6 +1,7 @@
 let http = require('http');
 let express = require('express');
 let socketio = require('socket.io');
+let cors = require('cors');
 let { myip } = require('./getip');
 let router = express.Router();
 
@@ -12,10 +13,10 @@ let app = express();
 let server = http.createServer(app);
 let io = socketio(server);
 
+app.use(cors());
 app.use(router);
 
 io.on('connection', function (socket) {
-  console.log(socket.id + " joined")
   socket.on('new_message', data => {
     console.log(socket.id, "    ", data);
     socket.broadcast.emit('message', data);
