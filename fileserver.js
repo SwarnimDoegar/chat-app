@@ -1,7 +1,7 @@
 let http = require('http');
 let express = require('express');
 let session = require('express-session');
-let { myip } = require('./getip');
+let getip = require('./getip');
 let cors = require('cors');
 let router = express.Router();
 let bodyParser = require('body-parser');
@@ -15,10 +15,10 @@ let socketMap = {};
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({ secret: 'abcd' }));
-app.use(express.static(__dirname + 'public'));
 app.use(cookieParser());
 app.use(cors());
 app.use(router);
+app.use(express.static(__dirname + '/public'));
 
 
 function parseCookies(req) {
@@ -84,25 +84,6 @@ router.post("/submit-form", (req, res) => {
     res.redirect('/');
 })
 
-router.get('/style.css', (req, res) => {
-    res.set({
-        'Content-Type': 'text/css'
-    })
-    res.sendFile(__dirname + '/public/style.css')
-})
-
-router.get('/app.js', (req, res) => {
-    res.set({
-        'Content-Type': 'text/javascript'
-    })
-    res.sendFile(__dirname + '/public/app.js')
-})
-router.get('/favicon.ico', (req, res) => {
-    res.set({
-        'Content-Type': 'image/vnd.microsoft.icon'
-    })
-    res.sendFile(__dirname + "/public/favicon.ico")
-})
 router.get('/login', (req, res) => {
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.sendFile(__dirname + "/public/login.html");
@@ -117,4 +98,4 @@ router.get('/session/destroy', (req, res) => {
     req.session.destroy();
     res.redirect("/login");
 })
-server.listen(process.env.PORT || 8080, myip, () => console.log(`Server has started on ${myip}:8080`));
+server.listen(process.env.PORT || 8080, getip.myip, () => console.log(`Server has started on ${getip.myip}:8080`));

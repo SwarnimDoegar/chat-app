@@ -3,11 +3,11 @@ let platform = os.platform();
 let ifaces = os.networkInterfaces();
 let myip = "";
 //console.log(ifaces);
-if(platform === 'linux'){
+if (platform === 'linux') {
     myip = ifaces.wlp2s0[0].address;
 }
-else{
+else {
     myip = ifaces['Wi-Fi'][1].address;
 }
-console.log(myip);
-module.exports = { myip };
+//console.log(myip);
+module.exports.myip = myip;

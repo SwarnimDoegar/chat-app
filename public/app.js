@@ -11,15 +11,15 @@ window.addEventListener('load', function () {
             chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
         });
         socket.on('message', (data) => {
-            if(data){
+            if (data) {
                 chatHistory.innerHTML += `<div class="reciever">${data}</div><br>`;
             }
         });
     })
 })
 
-let sender=document.querySelector(".sender");
-let reciever=document.querySelector(".reciever");
+// let sender=document.querySelector(".sender");
+// let reciever=document.querySelector(".reciever");
 
-sender.style.marginLeft  = 100-sender.style.widht;
-sender.style.marginRight  = 100-receiver.style.widht;
+// sender.style.marginLeft  = 100-sender.style.widht;
+// sender.style.marginRight  = 100-receiver.style.widht;

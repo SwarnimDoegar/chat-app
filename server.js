@@ -2,7 +2,7 @@ let http = require('http');
 let express = require('express');
 let socketio = require('socket.io');
 let cors = require('cors');
-let { myip } = require('./getip');
+let getip = require('./getip');
 let router = express.Router();
 
 router.get("/", (req, res) => {
@@ -23,4 +23,4 @@ io.on('connection', function (socket) {
   })
 });
 
-server.listen(process.env.PORT || 3000, myip, () => console.log(`Server has started.`));
+server.listen(process.env.PORT || 3000, getip.myip, () => console.log(`Server has started.`));
