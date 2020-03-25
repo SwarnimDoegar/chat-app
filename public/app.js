@@ -3,16 +3,25 @@ window.addEventListener('load', function () {
     let send = document.getElementById("sendBtn");
     let messageField = document.getElementById("messageInputField");
     let chatHistory = document.getElementById("chatHistory");
+    document.addEventListener('keydown', function (event) {
+        if (event.ctrlKey && event.keyCode == 13) {
+            send.click();
+            chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+        }
+    });
     socket.on('connect', function () {
         send.addEventListener('click', function () {
             let messageToBeSent = messageField.value;
             messageField.value = '';
-            socket.emit('new_message', messageToBeSent);
-            chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
+            if (messageToBeSent !== "") {
+                socket.emit('new_message', messageToBeSent);
+                chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
+            }
         });
         socket.on('message', (data) => {
             if (data) {
                 chatHistory.innerHTML += `<div class="reciever">${data}</div><br>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
             }
         });
     })
