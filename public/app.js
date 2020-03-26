@@ -16,6 +16,7 @@ window.addEventListener('load', function () {
             if (messageToBeSent !== "") {
                 socket.emit('new_message', messageToBeSent);
                 chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
             }
         });
         socket.on('message', (data) => {
@@ -29,6 +30,5 @@ window.addEventListener('load', function () {
 
 // let sender=document.querySelector(".sender");
 // let reciever=document.querySelector(".reciever");
-
 // sender.style.marginLeft  = 100-sender.style.widht;
 // sender.style.marginRight  = 100-receiver.style.widht;

@@ -88,7 +88,9 @@
     font-size: 1.2rem;
     max-width: 300px;
     max-height: 20px;
+    text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
 }
 .contactPic img{
     width:100%;
@@ -99,7 +101,6 @@
 .contactName{
     font-size: 1.7rem;
 }
-
 
 
 .rightPanel{
@@ -176,10 +177,19 @@ textarea {
 }
 .mesaageInputAndSend{
     bottom: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    padding: 20px;
+}
+
+#messageInputField{
+    padding: 10px;
+    font-size: 1.2rem;
+    width: 90%;
+    border-radius: 50px;
+    height: 45px;
 }
 
 #sendBtn{
@@ -187,8 +197,18 @@ textarea {
     height: 55px;
     border-radius: 50%;
     background: blue;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#sendBtn:hover{
+    background: rgb(91, 91, 255);
 }
 #sendBtn img{
     widows: 45px;
     height: 45px;
+    border: none;
+    padding: 4px;
 }
