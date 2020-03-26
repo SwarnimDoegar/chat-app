@@ -87,7 +87,7 @@
 }
 .contactMsg{
     font-size: 1.2rem;
-    max-width: 300px;
+    max-width: 200px;
     max-height: 20px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -150,42 +150,37 @@
     background: rgb(80, 80, 80);
 }
 .sender {
-    white-space: pre-line;
     background: rgb(170, 170, 170);
     padding: 18px;
     border-radius: 35px 0px 35px 35px;
     margin: 10px 40px 5px auto;
-    width: max-content;
+    width:max-content;
     max-width: 30%;
-    word-wrap: break-word;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    position: relative;
+    
 }
 .reciever {
-    white-space: pre-line;
     border-radius: 0px 35px 35px 35px;
     background: rgb(170, 170, 170);
     margin:10px 0 5px 40px;
     padding: 18px;
-    width: max-content;
     max-width: 30%;
-    word-wrap: break-word;  
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-       
+    position: relative;
+    word-wrap: break-word;
+    white-space: pre-line;
 }
 
 .message{
+
     font-size: 0.95rem;
+    padding: 8px;
 }
 
 .timeAndRead{
+    position: absolute;
     font-size: 0.8rem;
-    position: relative;
-    left: 74%;
-    width: 20%;
+    right: 11%;
+    bottom: 4%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -193,12 +188,8 @@
     color: rgb(85, 85, 85);
 }
 
-.time{
-    padding: 3px;
-}
-.read{
-    padding: 3px;
-
+.time .read{
+    padding: 4px;
 }
 
 textarea {
