@@ -16,6 +16,7 @@ window.addEventListener('load', function () {
             if (messageToBeSent !== "") {
                 socket.emit('new_message', messageToBeSent);
                 chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
             }
         });
         socket.on('message', (data) => {
