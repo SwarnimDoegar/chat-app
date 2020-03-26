@@ -66,14 +66,15 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    
+    overflow-y: scroll;
+    height: 90.66vh;
 }
 
 .contact{
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 100px;
+    min-height: 100px;
     border-bottom:1px solid rgb(255, 255, 255);
 }
 
@@ -153,22 +154,53 @@
     background: rgb(170, 170, 170);
     padding: 18px;
     border-radius: 35px 0px 35px 35px;
-    margin: 10px 40px 0 auto;
+    margin: 10px 40px 5px auto;
     width: max-content;
     max-width: 30%;
     word-wrap: break-word;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .reciever {
     white-space: pre-line;
     border-radius: 0px 35px 35px 35px;
     background: rgb(170, 170, 170);
-    margin:10px 0 0 40px;
+    margin:10px 0 5px 40px;
     padding: 18px;
     width: max-content;
     max-width: 30%;
     word-wrap: break-word;  
-    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+       
 }
+
+.message{
+
+}
+
+.timeAndRead{
+    font-size: 0.8rem;
+    position: relative;
+    left: 74%;
+    width: 20%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: rgb(85, 85, 85);
+}
+
+.time{
+    padding: 3px;
+}
+.read{
+    padding: 3px;
+
+}
+
 textarea {
     margin: 10px 0 0 20px;
     resize: none;
@@ -181,20 +213,25 @@ textarea {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
+    background: blanchedalmond;
 }
 
 #messageInputField{
+    margin-bottom: 5px;
     padding: 10px;
     font-size: 1.2rem;
     width: 90%;
     border-radius: 50px;
     height: 45px;
+    max-height: 105px;
+    border: none;
 }
 
 #sendBtn{
-    width: 55px;
-    height: 55px;
+    width: 48px;
+    margin: 10px;
+    height: 48px;
     border-radius: 50%;
     background: blue;
     cursor: pointer;
@@ -207,7 +244,7 @@ textarea {
     background: rgb(91, 91, 255);
 }
 #sendBtn img{
-    widows: 45px;
+    width: 45px;
     height: 45px;
     border: none;
     padding: 4px;
