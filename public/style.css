@@ -162,6 +162,7 @@
     background: #bfd6f6 ;
     margin:10px 0 5px 40px;
     padding: 12px;
+    width: max-content;
     max-width: 30%;
     position: relative;
     word-wrap: break-word;
