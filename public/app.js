@@ -3,6 +3,7 @@ window.addEventListener('load', function () {
     let send = document.getElementById("sendBtn");
     let messageField = document.getElementById("messageInputField");
     let chatHistory = document.getElementById("chatHistory");
+    chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
     document.addEventListener('keydown', function (event) {
         if (event.ctrlKey && event.keyCode == 13) {
             send.click();
