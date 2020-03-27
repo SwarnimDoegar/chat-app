@@ -30,5 +30,6 @@ window.addEventListener('load', function () {
 
 // let sender=document.querySelector(".sender");
 // let reciever=document.querySelector(".reciever");
+
 // sender.style.marginLeft  = 100-sender.style.widht;
 // sender.style.marginRight  = 100-receiver.style.widht;
