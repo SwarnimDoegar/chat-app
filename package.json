@@ -14,7 +14,10 @@
     "socket.io": "^2.3.0",
     "socket.io-redis": "^5.2.0"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "node server.js",
+    "devStart": "concurrently --kill-others \"nodemon fileserver.js\" \"nodemon server.js\""
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -33,5 +36,18 @@
   "devDependencies": {
     "concurrently": "^5.1.0",
     "cors": "^2.8.5"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "fileserver.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imabp/chat-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imabp/chat-app/issues"
+  },
+  "homepage": "https://github.com/imabp/chat-app#readme"
 }
