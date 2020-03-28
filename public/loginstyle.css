@@ -1,0 +1,47 @@
+body{
+    font-family: 'Baloo Thambi 2', cursive;
+}
+.center{
+    position: absolute;
+    top:50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#login_heading{
+    text-align: center;
+    font-size: 50px;
+}
+
+.input{
+    font-family: 'Baloo Thambi 2', cursive;
+    width: 90%;
+    height: 20px;
+    border-radius: 30px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    font-size: 20px;
+}
+.label{
+    position: relative;
+    font-size: 20px;
+    top: -5px;
+    left: 10px;
+}
+.button{
+    position: relative;
+    font-family: 'Baloo Thambi 2', cursive;
+    border-radius: 50px;
+    border: 1px solid black;
+    background-color: white;
+    font-size: 16px;
+    padding: 5px 40px 5px 40px;
+    left: 50%;
+    transform: translate(-50%);
+}

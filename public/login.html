@@ -6,23 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <script>
-        window.history.forward();
+        history.pushState(null, document.title, location.href);
+        history.back();
+        history.forward();
+        window.onpopstate = function () {
+            history.go(1);
+        };
     </script>
+    <link rel="stylesheet" href="./loginstyle.css">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi+2&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <h1>Login</h1>
-    <form action="/submit-form" method="POST">
-        <label for="username">Username</label>
-        <br>
-        <input type="text" name="username" id="username" placeholder="Username" required>
-        <br>
-        <label for="user_pass">Password</label>
-        <br>
-        <input type="password" name="user_pass" id="user_pass" placeholder="Password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
+    <div class="center">
+        <h1 id="login_heading">Login</h1>
+        <form action="/submit-form" method="POST">
+            <label for="username" class="label">Username</label>
+            <br>
+            <input type="text" name="username" id="username" placeholder="Username" required class="input">
+            <br>
+            <label for="user_pass" class="label">Password</label>
+            <br>
+            <input type="password" name="user_pass" id="user_pass" placeholder="Password" required class="input">
+            <br>
+            <button type="submit" class="button">Login</button>
+        </form>
+    </div>
 </body>
 
 </html>

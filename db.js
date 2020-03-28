@@ -71,8 +71,10 @@ async function loginUser(user_handle, user_pass) {
 }
 
 // async function updateSocketId(user_handle, socket_id)
-makeUser("fd", "sdfg", "sdfg", "xyx", "fcgvhbjk");
-loginUser("fd", "sdfg");
+makeUser("@vtrix", "password123", "Vivek Sony");
+makeUser("@deltecrest", "swarnim123", "Swarnim Doegar");
+makeUser("@deepdsd", "deepak989", "Deepak Singh");
+makeUser("@_tokyo", "pitti234", "Preeti Bhatia");
 module.exports = {
     makeUser,
     loginUser,
