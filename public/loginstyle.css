@@ -16,11 +16,22 @@ body{
 #login_heading{
     text-align: center;
     font-size: 38px;
-
+    transform: translateX(-5%);
+    color: rgba(0, 0, 0, 0.719);
 }
 
 form{
     width: 410px;
+}
+
+#userlabel, #passlabel{
+    z-index: -1;
+    padding: 3px;
+    color:rgba(103,100,255,1);
+    position: relative;
+    top: 40px;
+    opacity: 0;
+    transition: 0.2s ease-in-out;
 }
 
 .input{
@@ -31,10 +42,18 @@ form{
     width: 90%;
     height: 35px;
     border-radius: 4px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 16px;
+    margin-bottom: 14px;
     border: none;
+    border: 2px solid rgba(103, 100, 255, 0);
+    transition: 0.09s ease-in-out;
     font-size: 20px;
+}
+
+
+
+.input:focus {
+    border: 2px solid rgba(103,100,255,1);
 }
 
 .keepInAndForgot{
@@ -68,6 +87,7 @@ form{
     width: 410px;
     height: 75px;
     color: rgb(252, 252, 252);
+    text-align: center;
     position: relative;
     font-family: 'Baloo Thambi 2', cursive;
     border-radius: 5px;
@@ -77,8 +97,6 @@ form{
     font-size:1.55rem;
     cursor: pointer;
     padding: 20px 172px;
-    left: 50%;
-    transform: translate(-50%);
 }
 
 .button:hover{
