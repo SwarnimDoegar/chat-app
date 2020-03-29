@@ -21,13 +21,19 @@
     <div class="center">
         <h1 id="login_heading">Login</h1>
         <form action="/submit-form" method="POST">
-            <label for="username" class="label">Username</label>
-            <br>
             <input type="text" name="username" id="username" placeholder="Username" required class="input">
             <br>
-            <label for="user_pass" class="label">Password</label>
-            <br>
             <input type="password" name="user_pass" id="user_pass" placeholder="Password" required class="input">
+            <br>
+            <div class="keepInAndForgot">
+                <div class="keepIn">
+                    <input type="checkbox" name="keepMeLoggedIn" id="keepInInput">
+                    <label for="keepMeLoggedIn">Remember Me</label>
+                </div>
+
+                <a href="#" id="forgot">Forgot?</a>
+                
+            </div>
             <br>
             <button type="submit" class="button">Login</button>
         </form>
