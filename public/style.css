@@ -186,7 +186,7 @@
     color: rgb(85, 85, 85);
 }
 
-.time .read{
+.time ,.read{
     padding: 4px;
 }
 
@@ -240,3 +240,10 @@ textarea {
     transition: 0.3s;
 
 }
+
+
+@media only screen and (max-width: 800px) {
+    .sender , .reciever{
+        max-width: 70%;
+    }
+  }
