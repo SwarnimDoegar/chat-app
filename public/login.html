@@ -21,7 +21,11 @@
     <div class="center">
         <h1 id="login_heading">Login</h1>
         <form action="/submit-form" method="POST">
+            <label for="username" id="userlabel">Username</label>
+            <br>
             <input type="text" name="username" id="username" placeholder="Username" required class="input">
+            <br>
+            <label for="password" id="passlabel">Password</label>
             <br>
             <input type="password" name="user_pass" id="user_pass" placeholder="Password" required class="input">
             <br>
@@ -38,6 +42,7 @@
             <button type="submit" class="button">Login</button>
         </form>
     </div>
+    <script type="text/javascript" src="./style.js"></script>
 </body>
 
 </html>
