@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 let sha512 = require('js-sha512').sha512;
-let connection = mongoose.connect('mongodb://127.0.0.1:27017/chat-app?gssapiServiceName=mongodb', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.connect('mongodb://127.0.0.1:27017/chat-app?gssapiServiceName=mongodb', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 let userSchema = mongoose.Schema({
     user_handle: { type: String, required: true },
     user_pass: { type: String, required: true },
@@ -9,20 +9,25 @@ let userSchema = mongoose.Schema({
     dp_link: { type: String, default: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png" }
 })
 let chatSchema = mongoose.Schema({
-    from: String,
-    chat_date_time: { type: Date, default: new Date() },
+    from: { type: String, required: true },
+    chat_date_time: { type: Date, default: Date.now, required: true },
     message: { type: String, required: true },
-    read_or_not: Boolean
+    read: { type: Boolean, default: false }
 })
 
 let chatTableSchema = mongoose.Schema({
     user_handle: { type: String, required: true },
-    chatting_with: {
-        user_handle: { type: String, required: true },
+    chatting_with: [{
+        user_handle: { type: String },
         messages: [chatSchema]
-    }
+    }]
 })
+let chatTableModel = mongoose.model("Chats", chatTableSchema);
 let userCheckModel = mongoose.model('User', userSchema);
+let chatModel = mongoose.model('', chatSchema);
+
+
+/*Utility functions for users collection*/
 
 async function doesUserExist(user_handle) {
     let userexists = await userCheckModel.exists({ user_handle: String(user_handle) });
@@ -42,20 +47,13 @@ async function makeUser(user_handle, user_pass, user_name, socket_id, dp_link) {
         user_name: String(user_name),
     }
     if (userexists) {
-        if (!socket_id || !dp_link)
-            return
-        let updated_user = {
-            user_handle: String(user_handle),
-            user_pass: sha512(user_pass),
-            user_name: String(user_name),
-            socket_id: String(socket_id),
-            dp_link: String(dp_link)
-        }
-        let doc = await userModel.findOneAndUpdate({ user_handle: String(user_handle) }, updated_user);
-        return true;
+        return false;
     }
     let new_user = new userModel(user_doc);
-    let validated = await new_user.save();
+    let chatTableEntry = new chatTableModel({ user_handle: String(user_handle) });
+    chatTableEntry.save();
+    await new_user.save();
+    return true;
 }
 
 async function loginUser(user_handle, user_pass) {
@@ -64,22 +62,213 @@ async function loginUser(user_handle, user_pass) {
     user_handle = String(user_handle)
     user_pass = sha512(user_pass)
     let count = await userCheckModel.find({ user_handle: user_handle, user_pass: user_pass }).countDocuments();
-    if (count) {
-        console.log("logged in");
+    if (count == 1) {
         return true
     }
+    return false;
 }
 
-// async function updateSocketId(user_handle, socket_id)
-makeUser("@vtrix", "password123", "Vivek Sony");
-makeUser("@deltecrest", "swarnim123", "Swarnim Doegar");
-makeUser("@deepdsd", "deepak989", "Deepak Singh");
-makeUser("@_tokyo", "pitti234", "Preeti Bhatia");
+async function updateSocketId(user_handle, socket_id) {
+    if (!user_handle || !socket_id)
+        return false
+    let doc = await userCheckModel.findOneAndUpdate({ user_handle: String(user_handle) }, { socket_id: String(socket_id) })
+    return true;
+}
+async function fetchSocketId(user_handle) {
+    if (!user_handle)
+        return false;
+    let doc = await userCheckModel.find({ user_handle: String(user_handle) }, { socket_id: 1, _id: 0 });
+    if (doc.length == 1) {
+        return doc[0].socket_id;
+    }
+}
+async function updateDpLink(user_handle, dp_link) {
+    if (!user_handle || !dp_link)
+        return false
+    await userCheckModel.findOneAndUpdate({ user_handle: String(user_handle) }, { dp_link: String(dp_link) })
+    return true;
+}
+
+
+/*Utility functions for chats collection*/
+
+async function createChatObject(from, message, read) {
+    if (!from || !message)
+        return false
+    let chat_entry = {
+        from: String(from),
+        chat_date_time: String(Date.now()),
+        message: String(message),
+        read: Boolean(read)
+    }
+
+    return chat_entry;
+}
+
+async function appendChat(user_handle, user_handle_chatting_with, from, message, read) {
+    if (!user_handle || !user_handle_chatting_with || !from || !message)
+        return false;
+
+    if (from != user_handle && from != user_handle_chatting_with)
+        return "Invalid <from> argument"
+    let test = await chatTableModel.find({
+        user_handle: {
+            $in: [user_handle_chatting_with, user_handle]
+        }
+    })
+    if (test.length != 2)
+        return false
+
+    let doc = await chatTableModel.find({
+        user_handle: String(user_handle),
+        "chatting_with.user_handle": String(user_handle_chatting_with)
+    })
+
+    if (doc.length == 0) {
+        let new_doc = await chatTableModel.find({
+            user_handle: String(user_handle)
+        })
+        if (new_doc.length == 1) {
+            new_doc[0].chatting_with.push({ user_handle: String(user_handle_chatting_with) })
+            await new_doc[0].save();
+        }
+        else
+            return false
+    }
+
+    doc = await chatTableModel.find({
+        user_handle: String(user_handle),
+        "chatting_with.user_handle": String(user_handle_chatting_with)
+    }, {
+        chatting_with: {
+            $elemMatch: { user_handle: String(user_handle_chatting_with) }
+        }
+    });
+    let chatObj = await createChatObject(from, message, read);
+    if (doc.length == 1) {
+        doc[0].chatting_with[0].messages.push(chatObj);
+        doc[0].save()
+    }
+
+
+    //For Second User
+
+    doc = await chatTableModel.find({
+        user_handle: String(user_handle_chatting_with),
+        "chatting_with.user_handle": String(user_handle)
+    })
+    if (doc.length == 0) {
+        new_doc = await chatTableModel.find({
+            user_handle: String(user_handle_chatting_with)
+        })
+        if (new_doc.length == 1) {
+            new_doc[0].chatting_with.push({ user_handle: String(user_handle) })
+            await new_doc[0].save();
+        }
+        else
+            return false
+    }
+    doc = await chatTableModel.find({
+        user_handle: String(user_handle_chatting_with),
+        "chatting_with.user_handle": String(user_handle)
+    }, {
+        chatting_with: {
+            $elemMatch: { user_handle: String(user_handle) }
+        }
+    })
+    if (doc.length == 1) {
+        doc[0].chatting_with[0].messages.push(chatObj);
+        doc[0].save()
+    }
+    return true
+}
+async function setRead(user_handle, user_handle_chatting_with) {
+    if (!user_handle || !user_handle_chatting_with)
+        return false
+    let temp = await chatTableModel.find({
+        user_handle: String(user_handle)
+    }, {
+        "chatting_with": 1
+    })
+    temp.forEach(function (i) {
+        i.chatting_with.forEach(function (j) {
+            if (j.user_handle === user_handle_chatting_with) {
+                for (let k = j.messages.length - 1; k >= 0; k--) {
+                    if (!j.messages[k].read)
+                        j.messages[k].read = true;
+                    else
+                        break
+                }
+            }
+        })
+        i.save();
+    });
+}
+
+async function fetchContactPaneDetails(user_handle) {
+    let doc = await chatTableModel.aggregate([
+        {
+            '$match': {
+                'user_handle': '@vtrrix'
+            }
+        }, {
+            '$unwind': {
+                'path': '$chatting_with'
+            }
+        }, {
+            '$project': {
+                'chatting_with.user_handle': 1,
+                'last_message': {
+                    '$arrayElemAt': [
+                        '$chatting_with.messages', -1
+                    ]
+                },
+                '_id': 0
+            }
+        }, {
+            '$project': {
+                'last_message._id': 0
+            }
+        }
+    ])
+    return doc;
+}
+async function getChatsBetween(user_handle1, user_handle2) {
+    let doc = await chatTableModel.findOne({
+        user_handle: String(user_handle1),
+        "chatting_with.user_handle": String(user_handle2)
+    }, {
+        _id: 0,
+        chatting_with: {
+            $elemMatch: {
+                user_handle: String(user_handle2)
+            }
+        },
+        "chatting_with._id": 0,
+        "chatting_with.messages._id": 0,
+
+    })
+    return doc;
+}
+
 module.exports = {
+    mongoose,
+    sha512,
     makeUser,
     loginUser,
+    doesUserExist,
+    updateSocketId,
+    fetchSocketId,
+    updateDpLink,
+    createChatObject,
+    appendChat,
+    setRead,
+    fetchContactPaneDetails,
+    getChatsBetween,
     chatTableSchema,
     chatSchema,
     userSchema,
-    userCheckModel
+    userCheckModel,
+    chatTableModel,
+    chatModel
 }

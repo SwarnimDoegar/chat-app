@@ -3,18 +3,21 @@ let express = require('express');
 let session = require('express-session');
 let getip = require('./getip');
 let cors = require('cors');
+let ejs = require('ejs');
 let router = express.Router();
 let bodyParser = require('body-parser');
 let app = express();
 let server = http.createServer(app);
 let cookieParser = require('cookie-parser');
-let randomstring = require('randomstring');
+let mydb = require('./db');
 let Users = [];
 let socketMap = {};
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(session({ secret: 'abcd' }));
+app.use(session({ secret: "Abcd", resave: true, saveUninitialized: true }))
 app.use(cookieParser());
 app.use(cors());
 app.use(router);
@@ -39,36 +42,15 @@ function parseCookies(req) {
 
 function setCookies(req) {
     Cookies = parseCookies(req);
-    if (Cookies.User === undefined) {
-        let uid = "";
-        moveback:
-        while (true) {
-            uid = randomstring.generate({
-                length: 64,
-                charset: 'alphanumeric'
-            });
-            if (socketMap[uid] === undefined) {
-                socketMap[uid] = Cookies.io;
-                return uid;
-            }
-            else break moveback;
-            Users.push(uid);
-            break;
-        }
 
-    }
 }
-function updateSocketID(Cookies) {
-    socketMap[Cookies.User] = Cookies.io;
-    console.log(JSON.stringify(socketMap));
-}
+
 
 router.get('/', (req, res) => {
     let sess = req.session;
     let reqCookies = parseCookies(req);
     if (reqCookies.User != undefined) {
         sess.user = reqCookies.User;
-        updateSocketID(reqCookies);
         res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
         res.sendFile(__dirname + '/public/index.html');
     }
@@ -77,11 +59,19 @@ router.get('/', (req, res) => {
     }
 })
 
-router.post("/submit-form", (req, res) => {
-    uid = setCookies(req);
-    res.cookie('User', uid, { httpOnly: true });
-    req.session.user = uid;
-    res.redirect('/');
+router.post("/submit-form", async (req, res) => {
+    form_data = req.body;
+    mydb.loginUser(form_data.username, form_data.user_pass).then(result => {
+        if (result) {
+            if (form_data.keepMeLoggedIn == "on") {
+                res.cookie('User', form_data.username, { httpOnly: true });
+            }
+            res.redirect('/');
+        }
+        else {
+            console.log("Incorrect username or password")
+        }
+    })
 })
 
 router.get('/login', (req, res) => {
