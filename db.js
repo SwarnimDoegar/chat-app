@@ -231,8 +231,15 @@ async function fetchContactPaneDetails(user_handle) {
             }
         }
     ])
+    let userPicLinks = {}
+    doc.forEach(async (elem) => {
+        let user = await userCheckModel.findOne({ user_handle: String(elem.chatting_with.user_handle) }, { _id: 0, dp_link: 1 });
+        elem.dp_link = user.dp_link
+    })
     return doc;
 }
+
+fetchContactPaneDetails("@vtrrix");
 async function getChatsBetween(user_handle1, user_handle2) {
     let doc = await chatTableModel.findOne({
         user_handle: String(user_handle1),

@@ -24,39 +24,15 @@ app.use(router);
 app.use(express.static(__dirname + '/public'));
 
 
-function parseCookies(req) {
-    let ReqCookie = req.headers.cookie;
-    let Cookies = {};
-    if (ReqCookie != undefined) {
-        let indivCookies = ReqCookie.split(';');
-        indivCookies.forEach((values) => {
-            let tempCookie = values.split('=');
-            tempCookie.forEach((value, index) => {
-                tempCookie[index] = tempCookie[index].trim();
-            })
-            Cookies[tempCookie[0]] = tempCookie[1];
-        })
-    }
-    return Cookies;
-}
-
-function setCookies(req) {
-    Cookies = parseCookies(req);
-
-}
-
-
 router.get('/', (req, res) => {
-    let sess = req.session;
-    let reqCookies = parseCookies(req);
-    if (reqCookies.User != undefined) {
-        sess.user = reqCookies.User;
-        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    let reqCookies = req.cookies;
+    console.log(reqCookies)
+    if (reqCookies.tempUser || reqCookies.User) {
+        //res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
         res.sendFile(__dirname + '/public/index.html');
     }
-    else {
-        return res.redirect("/login");
-    }
+    else
+        res.redirect("/login");
 })
 
 router.post("/submit-form", async (req, res) => {
@@ -65,11 +41,15 @@ router.post("/submit-form", async (req, res) => {
         if (result) {
             if (form_data.keepMeLoggedIn == "on") {
                 res.cookie('User', form_data.username, { httpOnly: true });
+                res.redirect('/');
             }
-            res.redirect('/');
+            else {
+                res.cookie('tempUser', form_data.username, { httpOnly: true });
+                res.redirect('/');
+            }
         }
         else {
-            console.log("Incorrect username or password")
+            res.send("Incorrect username or password")
         }
     })
 })
@@ -79,12 +59,15 @@ router.get('/login', (req, res) => {
     res.sendFile(__dirname + "/public/login.html");
 })
 router.post('/logout', (req, res) => {
-    reqCookies = parseCookies(req);
+    reqCookies = req.cookies;
     delete socketMap[reqCookies.User];
+    res.clearCookie("tempUser")
     res.clearCookie('User');
     res.redirect("/session/destroy");
 })
 router.get('/session/destroy', (req, res) => {
+    console.log(req.cookies)
+    res.clearCookie("tempUser")
     req.session.destroy();
     res.redirect("/login");
 })

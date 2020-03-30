@@ -20,7 +20,8 @@
 <body>
     <div class="center">
         <h1 id="login_heading">Login</h1>
-        <form action="/submit-form" method="POST">
+        <p id="error-text"></p>
+        <form action="/submit-form" method="POST" id="login-form">
             <label for="username" id="userlabel">Username</label>
             <br>
             <input type="text" name="username" id="username" placeholder="Username" required class="input">
@@ -43,6 +44,7 @@
         </form>
     </div>
     <script type="text/javascript" src="./style.js"></script>
+    <script src="./loginscript.js" type="text/javascript"></script>
 </body>
 
 </html>

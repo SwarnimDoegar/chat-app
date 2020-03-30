@@ -4,6 +4,13 @@ window.addEventListener('load', function () {
     let messageField = document.getElementById("messageInputField");
     let chatHistory = document.getElementById("chatHistory");
     chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        fetch("/session/destroy").then(response => {
+            if (response.redirected)
+                window.location.href = response.url
+        })
+    });
     document.addEventListener('keydown', function (event) {
         if (event.ctrlKey && event.keyCode == 13) {
             send.click();

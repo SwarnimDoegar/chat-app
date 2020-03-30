@@ -12,9 +12,11 @@
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.6",
     "nodemon": "^2.0.2",
+    "querystring": "^0.2.0",
     "randomstring": "^1.1.5",
     "socket.io": "^2.3.0",
-    "socket.io-redis": "^5.2.0"
+    "socket.io-redis": "^5.2.0",
+    "url": "^0.11.0"
   },
   "scripts": {
     "start": "node server.js",
