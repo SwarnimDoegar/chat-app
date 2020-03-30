@@ -44,12 +44,10 @@ form{
     border-radius: 4px;
     padding: 16px;
     margin-bottom: 14px;
-    border: none;
-    border: 2px solid rgba(103, 100, 255, 0);
+    border: 3px solid rgba(103, 100, 255, 0);
     transition: 0.09s ease-in-out;
     font-size: 20px;
 }
-
 
 
 .input:focus {
@@ -100,4 +98,28 @@ form{
 }
 
 .button:hover , .button:active{
-    background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%); }
+    background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%);
+}
+
+#newUser{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: lighter;
+    margin-top: 20px;
+}
+
+#createAccLabel{
+    font-family: 'Baloo Thambi 2', cursive;
+    color: rgb(117, 117, 117);
+    font-size: 0.95rem;
+    margin-bottom:4px ;
+}
+#createAccLink{
+    text-decoration: none;
+    color:rgba(103,100,255,1);
+}
+#createAccLink:hover ,#createAccLink:active{
+    color:rgb(129, 127, 253);
+}
