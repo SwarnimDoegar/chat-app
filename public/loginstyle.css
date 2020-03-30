@@ -31,7 +31,7 @@ form{
     position: relative;
     top: 40px;
     opacity: 0;
-    transition: 0.2s ease-in-out;
+    transition: 0.1s ease-in-out;
 }
 
 .input{
@@ -53,7 +53,7 @@ form{
 
 
 .input:focus {
-    border: 2px solid rgba(103,100,255,1);
+    border: 3px solid rgba(103,100,255,1);
 }
 
 .keepInAndForgot{
@@ -79,7 +79,7 @@ form{
     text-decoration: none;
 }
 
-#forgot:hover{
+#forgot:hover , #forgot:active{
     color:rgba(130,127,254,1) ;
 }
 
@@ -99,5 +99,5 @@ form{
     padding: 20px 172px;
 }
 
-.button:hover{
+.button:hover , .button:active{
     background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%); }

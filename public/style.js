@@ -16,3 +16,4 @@ document.getElementById("user_pass").addEventListener("blur", ()=>{
     document.getElementById("passlabel").style.opacity=0;
 });
 
+ 
