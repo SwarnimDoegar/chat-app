@@ -19,7 +19,7 @@
 
 <body>
     <div class="login">
-        <h1 id="loginHeading">Login</h1>
+        <h1 id="login_heading">Login</h1>
         <p id="error-text"></p>
         <form action="/submit-form" method="POST" id="login-form">
             <label for="username" id="userlabel">Username</label>
@@ -49,6 +49,39 @@
         </div>
 
     </div>
+
+
+    <div class="signup">
+        <h1 class="heading">Signup</h1>
+        <p id="error-text"></p>
+        <form action="/submit-form" method="POST" id="login-form">
+            <label for="" id="handlelabel">User Handle</label>
+            <br>
+            <input type="text" name="Handle" id="handle" placeholder="User Handle" required class="input">
+            <br>
+            <label for="username" id="userlabel">Username</label>
+            <br>
+            <input type="text" name="username" id="username" placeholder="Username" required class="input">
+            <br>
+            <label for="password" id="passlabel">Password</label>
+            <br>
+            <input type="password" name="user_pass" id="user_pass" placeholder="Password" required class="input">
+            <br>
+
+            <div class="keepInAndForgot">
+                <div class="keepIn">
+                    <input type="checkbox" name="keepMeLoggedIn" id="keepInInput">
+                    <label for="keepMeLoggedIn">Remember Me</label>
+                </div>
+
+            </div>
+            <br>
+            <button type="submit" class="button">Login</button>
+        </form>
+
+    </div>
+
+    
 
     <script type="text/javascript" src="./loginscript.js"></script>
     <script src="./loginstyle.js" type="text/javascript"></script>
