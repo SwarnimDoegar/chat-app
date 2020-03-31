@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+let randomString = require('randomstring');
 let sha512 = require('js-sha512').sha512;
 mongoose.connect('mongodb://127.0.0.1:27017/chat-app?gssapiServiceName=mongodb', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 let userSchema = mongoose.Schema({
@@ -6,7 +7,7 @@ let userSchema = mongoose.Schema({
     user_pass: { type: String, required: true },
     user_name: { type: String, required: true },
     socket_id: { type: String, default: "offline" },
-    dp_link: { type: String, default: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png" }
+    dp_link: { type: String, default: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png" },
 })
 let chatSchema = mongoose.Schema({
     from: { type: String, required: true },
@@ -41,13 +42,13 @@ async function makeUser(user_handle, user_pass, user_name, socket_id, dp_link) {
         return false
     let userModel = mongoose.model('User', userSchema);
     let userexists = await doesUserExist(user_handle);
+    if (userexists) {
+        return false;
+    }
     let user_doc = {
         user_handle: String(user_handle),
         user_pass: sha512(user_pass),
         user_name: String(user_name),
-    }
-    if (userexists) {
-        return false;
     }
     let new_user = new userModel(user_doc);
     let chatTableEntry = new chatTableModel({ user_handle: String(user_handle) });
@@ -61,12 +62,13 @@ async function loginUser(user_handle, user_pass) {
         return false
     user_handle = String(user_handle)
     user_pass = sha512(user_pass)
-    let count = await userCheckModel.find({ user_handle: user_handle, user_pass: user_pass }).countDocuments();
-    if (count == 1) {
-        return true
+    let doc = await userCheckModel.find({ user_handle: user_handle, user_pass: user_pass });
+    if (doc.length == 1) {
+        return doc[0];
     }
     return false;
 }
+
 
 async function updateSocketId(user_handle, socket_id) {
     if (!user_handle || !socket_id)
@@ -87,6 +89,15 @@ async function updateDpLink(user_handle, dp_link) {
         return false
     await userCheckModel.findOneAndUpdate({ user_handle: String(user_handle) }, { dp_link: String(dp_link) })
     return true;
+}
+
+async function getUserDetails(user_handle) {
+    if (!user_handle)
+        return false
+    let doc = await userCheckModel.findOne({ user_handle: String(user_handle) }, { _id: 0, user_pass: 0, __v: 0, socket_id: 0 });
+    if (doc)
+        return doc;
+    else return false
 }
 
 
@@ -206,10 +217,12 @@ async function setRead(user_handle, user_handle_chatting_with) {
 }
 
 async function fetchContactPaneDetails(user_handle) {
+    if (!user_handle)
+        return false
     let doc = await chatTableModel.aggregate([
         {
             '$match': {
-                'user_handle': '@vtrrix'
+                'user_handle': String(user_handle)
             }
         }, {
             '$unwind': {
@@ -231,15 +244,20 @@ async function fetchContactPaneDetails(user_handle) {
             }
         }
     ])
-    let userPicLinks = {}
-    doc.forEach(async (elem) => {
-        let user = await userCheckModel.findOne({ user_handle: String(elem.chatting_with.user_handle) }, { _id: 0, dp_link: 1 });
-        elem.dp_link = user.dp_link
+    const promises = doc.map(async function (elem) {
+        let user = await userCheckModel.findOne({ user_handle: String(elem.chatting_with.user_handle) }, { _id: 0, dp_link: 1, user_name: 1 });
+        let new_doc = {
+            chatting_with: elem.chatting_with,
+            last_message: elem.last_message,
+            dp_link: user.dp_link,
+            user_name: user.user_name
+        }
+        return new_doc;
     })
-    return doc;
+    let retdoc = await Promise.all(promises);
+    return retdoc
 }
 
-fetchContactPaneDetails("@vtrrix");
 async function getChatsBetween(user_handle1, user_handle2) {
     let doc = await chatTableModel.findOne({
         user_handle: String(user_handle1),
@@ -259,7 +277,6 @@ async function getChatsBetween(user_handle1, user_handle2) {
 }
 
 module.exports = {
-    mongoose,
     sha512,
     makeUser,
     loginUser,
@@ -272,9 +289,11 @@ module.exports = {
     setRead,
     fetchContactPaneDetails,
     getChatsBetween,
+    getUserDetails,
     chatTableSchema,
     chatSchema,
     userSchema,
+    randomString,
     userCheckModel,
     chatTableModel,
     chatModel
