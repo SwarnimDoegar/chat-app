@@ -183,6 +183,8 @@
     width:max-content;
     max-width: 30%;
     position: relative;
+    word-wrap: break-word;
+    white-space: pre-line;
     
 }
 .reciever {

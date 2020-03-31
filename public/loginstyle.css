@@ -1,7 +1,7 @@
 body{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-.center{
+.login{
     position: absolute;
     top:50vh;
     left: 50vw;
@@ -13,7 +13,19 @@ body{
     justify-content: center;
 }
 
-#login_heading{
+.signup{
+    position: absolute;
+    top:120vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    width: 75vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading{
     text-align: center;
     font-size: 38px;
     transform: translateX(-5%);
@@ -122,4 +134,21 @@ form{
 }
 #createAccLink:hover ,#createAccLink:active{
     color:rgb(129, 127, 253);
+}
+
+@media only screen and (max-width: 576px) {
+    form{
+        width: 100%;
+    }
+    .button{
+        width: 100%;
+        padding: 10px 20px;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .button{
+        width: 105%;
+        padding: 10px 20px;
+    }
 }
