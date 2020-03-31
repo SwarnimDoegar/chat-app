@@ -275,7 +275,7 @@ async function getChatsBetween(user_handle1, user_handle2) {
     })
     return doc;
 }
-
+makeUser("Vtrix","vtx","VivekSony");
 module.exports = {
     sha512,
     makeUser,

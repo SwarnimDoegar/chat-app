@@ -11,7 +11,7 @@
     flex-wrap: nowrap;
 }
 
-.leftPanel{
+#leftPanel{
     width: 30%;
     border-right:1px solid rgb(255, 255, 255);
 }
@@ -56,8 +56,13 @@
     width: 35px;
     height: 35px;
     opacity: 0.8;
+    transition: 0.1s;
 }
 
+.logout button:hover img{
+    width: 37px;
+    height: 37px;
+}
 
 .contacts{
     height: fit-content;
@@ -70,6 +75,7 @@
 }
 
 .contact{
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -103,7 +109,7 @@
 }
 
 
-.rightPanel{
+#rightPanel{
     width: 70%;
 }
 
@@ -114,8 +120,16 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     border-bottom:1px solid rgb(255, 255, 255);
 
+}
+
+#receiverPicAndName{
+    padding: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .recieverPic{
@@ -135,6 +149,20 @@
     font-size: 1.7rem;
 }
 
+.back{
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back img{
+    cursor: pointer;
+    width: 0;
+    height: 37px;
+    opacity: 0.75;
+}
 .chat{
     width: 100%;
     display: flex;
@@ -155,6 +183,8 @@
     width:max-content;
     max-width: 30%;
     position: relative;
+    word-wrap: break-word;
+    white-space: pre-line;
     
 }
 .reciever {
@@ -242,7 +272,20 @@ textarea {
 }
 
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 576px) {
+    #leftPanel{
+        width: 100%;
+    }
+
+    .back img{
+        width: 37px;
+    }
+    
+    #rightPanel{
+        width: 0%;
+        display: none;
+
+    }
     .sender , .reciever{
         max-width: 70%;
     }

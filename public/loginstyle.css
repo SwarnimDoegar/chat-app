@@ -1,7 +1,7 @@
 body{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-.center{
+.login{
     position: absolute;
     top:50vh;
     left: 50vw;
@@ -13,7 +13,19 @@ body{
     justify-content: center;
 }
 
-#login_heading{
+.signup{
+    position: absolute;
+    top:120vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    width: 75vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading{
     text-align: center;
     font-size: 38px;
     transform: translateX(-5%);
@@ -31,7 +43,7 @@ form{
     position: relative;
     top: 40px;
     opacity: 0;
-    transition: 0.2s ease-in-out;
+    transition: 0.1s ease-in-out;
 }
 
 .input{
@@ -44,16 +56,14 @@ form{
     border-radius: 4px;
     padding: 16px;
     margin-bottom: 14px;
-    border: none;
-    border: 2px solid rgba(103, 100, 255, 0);
+    border: 3px solid rgba(103, 100, 255, 0);
     transition: 0.09s ease-in-out;
     font-size: 20px;
 }
 
 
-
 .input:focus {
-    border: 2px solid rgba(103,100,255,1);
+    border: 3px solid rgba(103,100,255,1);
 }
 
 .keepInAndForgot{
@@ -79,7 +89,7 @@ form{
     text-decoration: none;
 }
 
-#forgot:hover{
+#forgot:hover , #forgot:active{
     color:rgba(130,127,254,1) ;
 }
 
@@ -99,5 +109,46 @@ form{
     padding: 20px 172px;
 }
 
-.button:hover{
-    background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%); }
+.button:hover , .button:active{
+    background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%);
+}
+
+#newUser{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: lighter;
+    margin-top: 20px;
+}
+
+#createAccLabel{
+    font-family: 'Baloo Thambi 2', cursive;
+    color: rgb(117, 117, 117);
+    font-size: 0.95rem;
+    margin-bottom:4px ;
+}
+#createAccLink{
+    text-decoration: none;
+    color:rgba(103,100,255,1);
+}
+#createAccLink:hover ,#createAccLink:active{
+    color:rgb(129, 127, 253);
+}
+
+@media only screen and (max-width: 576px) {
+    form{
+        width: 100%;
+    }
+    .button{
+        width: 100%;
+        padding: 10px 20px;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .button{
+        width: 105%;
+        padding: 10px 20px;
+    }
+}
