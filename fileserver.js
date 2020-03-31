@@ -110,6 +110,15 @@ app.post('/logout', (req, res) => {
 
 app.get("/test", (req, res) => {
     let handle = "@vtrrix"
+    if (req.session) {
+        if (req.session.user) {
+            handle = req.session.user.user_handle
+        }
+        if (req.session.tempUser) {
+            handle = req.session.tempUser.user_handle
+        }
+    }
+
     mydb.fetchContactPaneDetails(handle).then(async (result) => {
         let user = await mydb.getUserDetails(handle);
         if (result)
