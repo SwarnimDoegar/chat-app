@@ -4,19 +4,20 @@ window.addEventListener('load', function () {
     let messageField = document.getElementById("messageInputField");
     let chatHistory = document.getElementById("chatHistory");
     chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
-    window.addEventListener('beforeunload', function (e) {
-        e.preventDefault();
+    window.onbeforeunload = function (e) {
         fetch("/session/destroy").then(response => {
-            if (response.redirected)
-                window.location.href = response.url
         })
-    });
+    }
+    //for ctrl+enter is send
     document.addEventListener('keydown', function (event) {
         if (event.ctrlKey && event.keyCode == 13) {
             send.click();
             chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
         }
     });
+    window.onload = function (e) {
+
+    }
     socket.on('connect', function () {
         send.addEventListener('click', function () {
             let messageToBeSent = messageField.value;

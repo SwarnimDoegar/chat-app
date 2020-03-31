@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat Page</title>
+    <link type="text/css" rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+
+    <div class="leader">
+
+        <div class="leftPanel">
+
+            <div class="userInfo">
+
+                <img src="<%= user.dp_link%>" class="userPic"
+                        alt="profile pic">
+
+                <div class="userProfile">
+
+                </div>
+                <div class="logout">
+                    <form action="/logout" method="post">
+                        <button type="submit">
+                            <img src="./images/logout.png" alt="logout">
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="contacts">
+                <% contacts.forEach(elem => { %>
+                    <%- include('contactpane', {dp_link:elem.dp_link, user_handle:elem.user_name, message:elem.last_message.message}); %>
+                <% });%>
+            </div>
+
+        </div>
+
+        <div class="rightPanel">
+
+            <div class="recieverInfo">
+                <img src="<%= user.dp_link%>" class="userPic"
+                        alt="profile pic">
+
+                <div class="receiverName">
+                    <%=user.user_name%>
+                </div>
+            </div>
+
+            <div class="chat">
+                <div id="chatHistory">
+                    <div class="sender">
+                        <div class="message">Ad magni vitae quidem.</div>
+                        <div class="timeAndRead">
+                            <div class="time">02:45</div>
+                            <div class="read">yes</div>
+                        </div>
+
+                    </div>
+                    <div class="reciever">
+                        <div class="message">Lorem ipsum dolor sit amet consectetur
+                            adipisicing elit. Dolor doloribus consectetur accusamus necessitatibus quis,
+                            enim illo ipsa dicta voluptatibus eum, deserunt, temporibus totam culpa
+                            tenetur officia consequuntur? Iste, sequi possimus. Dignissimos in,
+                            aliquid quis explicabo reprehenderit.</div>
+
+                        <div class="timeAndRead">
+                            <div class="time">02:45</div>
+                            <div class="read">yes</div>
+                        </div>
+
+                    </div>
+
+                    <div class="sender">
+                        <div class="message">Lorem ipsum dolor sit amet consectetur
+                            adipisicing elit. Dolor doloribus consectetur accusamus necessitatibus quis,
+                            enim illo ipsa dicta voluptatibus eum, deserunt, temporibus totam culpa
+                            tenetur officia consequuntur? Iste, sequi possimus. Dignissimos in,
+                            aliquid quis explicabo reprehenderit, quod dicta odit sunt officia
+                            laborum quam numquam enim aut, iure nesciunt. Facilis, pariatur beatae.
+                            Ad magni vitae quidem.</div>
+
+                        <div class="timeAndRead">
+                            <div class="time">02:45</div>
+                            <div class="read">yes</div>
+                        </div>
+
+                    </div>
+
+                    <div class="reciever">
+                        <div class="message">Lorem ipsum dolor sit amet consectetur
+                            adipisicing elit. Dolor doloribus consectetur accusamus necessitatibus quis,
+                            enim illo ipsa dicta voluptatibus eum, deserunt, temporibus totam culpa
+                            tenetur officia consequuntur? Iste.</div>
+                        <div class="timeAndRead">
+                            <div class="time">02:45</div>
+                            <div class="read">yes</div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="mesaageInputAndSend">
+                    <textarea name="messageInputField" id="messageInputField" cols="30" rows="1"></textarea>
+                    <button type="submit" id="sendBtn">
+                        <img src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt="send">
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div id="scripting"></div>
+    <script>
+        let socketscript = document.createElement("script");
+        socketscript.src = `http://${window.location.hostname}:3000/socket.io/socket.io.js`;
+        document.getElementById("scripting").appendChild(socketscript);
+        history.pushState(null, document.title, location.href);
+        history.back();
+        history.forward();
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="./app.js"></script>
+    <script type="text/javascript" src="./style.js"></script>
+</body>
