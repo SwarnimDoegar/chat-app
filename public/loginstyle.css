@@ -1,31 +1,34 @@
 body{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
 }
-.login{
-    position: absolute;
-    top:50vh;
-    left: 50vw;
-    transform: translate(-50%, -50%);
-    width: 75vw;
+.login{ 
+    width: 35vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 5vw;
+
 }
-
-
-#loginHeading{
+#loginHeading , #signupHeading{
     text-align: center;
     font-size: 2.5rem;
     transform: translateX(-5%);
     color: rgba(0, 0, 0, 0.719);
+    width: max-content;
 }
 
 form{
     width: 410px;
 }
 
-#userlabel, #passlabel{
+#userlabel, #passlabel,
+#userlabelSignup, #passlabelSignup, #handlelabel{
     z-index: -1;
     padding: 3px;
     color:rgba(103,100,255,1);
@@ -97,10 +100,43 @@ form{
     cursor: pointer;
     padding: 20px 172px;
 }
-
 .button:hover , .button:active{
     background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%);
 }
+
+.signup{ 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* margin: 5vw; */
+    /* width: 35vw; */
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+}
+
+.SignUpButton{
+    width: 410px;
+    height: 75px;
+    color: rgb(252, 252, 252);
+    text-align: center;
+    position: relative;
+    font-family: 'Baloo Thambi 2', cursive;
+    border-radius: 5px;
+    border: none;
+    background: rgb(103,100,255);
+    background: linear-gradient(90deg, rgba(103,100,255,1) 0%, rgba(130,127,254,1) 100%); 
+    font-size:1.55rem;
+    cursor: pointer;
+    padding: 20px 152px;
+}
+
+.SignUpButton:hover , .SignUpButton:active{
+    background: linear-gradient(90deg, rgb(130, 128, 255) 0%, rgb(154, 153, 255) 100%);
+}
+
 
 #newUser{
     display: flex;
@@ -120,24 +156,44 @@ form{
 #createAccLink{
     text-decoration: none;
     color:rgba(103,100,255,1);
+    cursor: pointer;
 }
 #createAccLink:hover ,#createAccLink:active{
     color:rgb(129, 127, 253);
 }
 
+
+
+@media only screen and (max-width: 1050px) {
+    body{
+        flex-direction: column-reverse;
+    }
+    .signup{
+        width: 90vw;
+    }
+    .signup{
+        height: 0;
+    }
+}
+
 @media only screen and (max-width: 576px) {
+
+    .login {
+        width: 90vw;
+        margin: auto;
+    }
     form{
         width: 100%;
     }
-    .button{
+    .button, .SignUpButton{
         width: 100%;
         padding: 10px 20px;
     }
 }
 
 @media only screen and (max-width: 420px) {
-    .button{
-        width: 105%;
+    .button , .SignUpButton{
+        width: 100%;
         padding: 10px 20px;
     }
 }

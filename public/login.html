@@ -50,6 +50,29 @@
 
     </div>
 
+    <div class="signup">
+        <h1 id="signupHeading">Sign Up</h1>
+        <p id="error-text"></p>
+        <form action="/login" method="POST" id="login-form">
+            <label for="userhandle" id="handlelabel">Handle</label>
+            <br>
+            <input type="text" name="userhandle" id="userhandle" placeholder="Handle" required class="input">
+            <br>
+            <label for="username" id="userlabelSignup">Username</label>
+            <br>
+            <input type="text" name="username" id="usernameSignup" placeholder="Username" required class="input">
+            <br>
+            <label for="password" id="passlabelSignup">Password</label>
+            <br>
+            <input type="password" name="user_pass" id="user_passSignup" placeholder="Password" required class="input">
+            <br><br>
+            
+            <button type="submit" class="SignUpButton">Sign Up</button>
+        </form>
+
+
+    </div>
+
     <script type="text/javascript" src="./loginscript.js"></script>
     <script src="./loginstyle.js" type="text/javascript"></script>
 </body>
