@@ -6,7 +6,6 @@ if(screen.width <= 576){
         document.getElementById("leftPanel").style.display = "none";
         document.getElementById("rightPanel").style.width = "100%";
         document.getElementById("rightPanel").style.display = "block";
-
      });
 
      document.querySelector(".back").addEventListener("click", ()=>{

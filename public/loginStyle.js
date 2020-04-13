@@ -51,7 +51,7 @@ document.getElementById("user_passSignup").addEventListener("focusout", () => {
     passlabelSignup.style.opacity = 0;
 });
 
-//To make signup apper
+//To make signup appear
 
 let createAccLink=document.getElementById("createAccLink");
 let signup=document.querySelector(".signup");
