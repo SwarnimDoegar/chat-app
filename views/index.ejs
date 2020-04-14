@@ -34,9 +34,18 @@
                     </form>
                 </div>
 
-            </div>
+            </div>''
 
-            <div class="contacts">
+
+            <div class="contacts"><!--Also has search bar-->
+
+                <div class="searchBar">
+                    <input id="search" type="search" placeholder="Search..." >
+                    <button>
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQeGe-D-nFh9X1Rb7ScR5h3sIN41E6JikZ1viITMStRv56Rp82g&usqp=CAU" alt="search">
+                    </button>
+                </div>
+
 
                 <% contacts.forEach(elem => { %>
                     <%- include('contactpane', {dp_link:elem.dp_link, user_handle:elem.user_name, message:elem.last_message.message}); %>
