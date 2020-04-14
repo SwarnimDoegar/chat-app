@@ -98,7 +98,7 @@ async function updateDpLink(user_handle, dp_link) {
 async function getUserDetails(user_handle) {
     if (!user_handle)
         return false
-    let doc = await userCheckModel.findOne({ user_handle: String(user_handle) }, { _id: 0, user_pass: 0, __v: 0, socket_id: 0 });
+    let doc = await userCheckModel.findOne({ user_handle: String(user_handle) }, { _id: 0, user_pass: 0, __v: 0 });
     if (doc)
         return doc;
     else return false
@@ -211,10 +211,6 @@ async function appendChat(user_handle, user_handle_chatting_with, from, message,
     }
     return true
 }
-makeUser('@deep', 'pass99', 'deepak').then(r => {
-    appendChat('@vtrix', '@deep', '@deep', 'Nope');
-})
-
 
 async function setRead(user_handle, user_handle_chatting_with) {
     if (!user_handle || !user_handle_chatting_with)
@@ -291,6 +287,7 @@ async function getChatsBetween(user_handle1, user_handle2) {
         "chatting_with.user_handle": String(user_handle2)
     }, {
         _id: 0,
+        __v: 0,
         chatting_with: {
             $elemMatch: {
                 user_handle: String(user_handle2)
@@ -302,6 +299,15 @@ async function getChatsBetween(user_handle1, user_handle2) {
     })
     return doc;
 }
+
+// async function initiate() {
+//     await makeUser('@vtrix', 'password123', 'vivek');
+//     await makeUser('@delta', 'password123', 'swarnim');
+//     await appendChat('@vtrix', '@delta', '@delta', 'Hello');
+//     await appendChat('@vtrix', '@delta', '@vtrix', 'Hello');
+//     await appendChat('@vtrix', '@delta', '@delta', 'How are you?');
+// }
+// initiate();
 module.exports = {
     sha512,
     makeUser,

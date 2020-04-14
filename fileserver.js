@@ -6,6 +6,7 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mydb = require('./db');
+const queryString = require('querystring');
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')(session);
 mongoose.connect('mongodb://127.0.0.1:27017/chat-app?gssapiServiceName=mongodb', {
@@ -32,21 +33,28 @@ app.use(cors());
 
 app.get('/', async (req, res) => {
     if (req.session && (req.session.user || req.session.tempUser)) {
-        let user = req.session.user ? req.session.user.user_handle : req.session.tempUser.user_handle;
-        let isUserOnline = await mydb.checkOnline(user);
+        let handle = req.session.user ? req.session.user.user_handle : req.session.tempUser.user_handle;
+        let isUserOnline = await mydb.checkOnline(handle);
         if (isUserOnline) {
-            let sockid = await mydb.fetchSocketId(user);
-            if (sockid == 'offline')
-                return res.sendFile(__dirname + "/public/index.html");
+            let sockid = await mydb.fetchSocketId(handle);
+            if (sockid == 'offline') {
+                mydb.fetchContactPaneDetails(handle).then(async (result) => {
+                    let user = await mydb.getUserDetails(handle);
+                    if (result)
+                        return res.render("index", { contacts: result, user: user });
+                })
+            }
             else {
-                // await mydb.updateSocketId(user, "offline")
-                // await mydb.setOnline(user, false);
                 req.session.destroy()
                 res.redirect('/login');
             }
         }
         else {
-            return res.sendFile(__dirname + "/public/index.html");
+            mydb.fetchContactPaneDetails(handle).then(async (result) => {
+                let user = await mydb.getUserDetails(handle);
+                if (result)
+                    return res.render("index", { contacts: result, user: user });
+            })
         }
     }
     else {
@@ -105,6 +113,10 @@ app.get('/getContactPane', async (req, res) => {
     }
     return res.send(doc);
 })
+app.get('/getChats', async (req, res) => {
+    let chats = await mydb.getChatsBetween(req.query.u1, req.query.u2);
+    res.send(chats);
+})
 app.get('/session/destroy', async (req, res) => {
     if (req.session && req.session.tempUser) {
         await mydb.updateSocketId(req.session.tempUser.user_handle, "offline")
@@ -147,7 +159,6 @@ app.get("/test", (req, res) => {
             handle = req.session.tempUser.user_handle
         }
     }
-    console.log(handle + " in test");
     mydb.fetchContactPaneDetails(handle).then(async (result) => {
         let user = await mydb.getUserDetails(handle);
         if (result)

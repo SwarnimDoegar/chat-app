@@ -17,9 +17,18 @@ io.on('connection', function (socket) {
     mydb.updateSocketId(user_handle, id);
     mydb.setOnline(user_handle, true);
   })
-  socket.on('new_message', data => {
-    console.log(socket.id, "    ", data);
-    socket.broadcast.emit('message', data);
+  socket.on('new_message', async (data) => {
+    console.log(socket.id, "    ", typeof data.from);
+    await mydb.appendChat(data.from, data.to, data.from, data.message);
+    let details = await mydb.getUserDetails(data.to);
+    if (details.socket_id != 'offline') {
+      socket.to(details.socket_id).emit('message', {
+        from: data.from,
+        message: data.message,
+        chat_date_time: Date.now()
+      })
+    }
+
   })
 
 });
