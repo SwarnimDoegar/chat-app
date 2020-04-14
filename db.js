@@ -308,6 +308,8 @@ async function getChatsBetween(user_handle1, user_handle2) {
 //     await appendChat('@vtrix', '@delta', '@delta', 'How are you?');
 // }
 // initiate();
+
+
 module.exports = {
     sha512,
     makeUser,
