@@ -8,6 +8,7 @@ let userSchema = mongoose.Schema({
     user_name: { type: String, required: true },
     socket_id: { type: String, default: "offline" },
     dp_link: { type: String, default: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-512.png" },
+    online: { type: Boolean, required: true, default: false },
 })
 let chatSchema = mongoose.Schema({
     from: { type: String, required: true },
@@ -64,7 +65,10 @@ async function loginUser(user_handle, user_pass) {
     user_pass = sha512(user_pass)
     let doc = await userCheckModel.find({ user_handle: user_handle, user_pass: user_pass });
     if (doc.length == 1) {
-        return doc[0];
+        let new_doc = {}
+        new_doc.user_handle = doc[0].user_handle;
+        new_doc.user_name = doc[0].user_name;
+        return new_doc
     }
     return false;
 }
@@ -98,6 +102,20 @@ async function getUserDetails(user_handle) {
     if (doc)
         return doc;
     else return false
+}
+
+async function setOnline(user_handle, val) {
+    if (!user_handle)
+        return false;
+    await userCheckModel.findOneAndUpdate({ user_handle: String(user_handle) }, { online: Boolean(val) })
+    return true;
+}
+async function checkOnline(user_handle) {
+    if (!user_handle)
+        return false;
+    const doc = await userCheckModel.findOne({ user_handle: String(user_handle) });
+    if (doc)
+        return doc.online;
 }
 
 
@@ -193,6 +211,11 @@ async function appendChat(user_handle, user_handle_chatting_with, from, message,
     }
     return true
 }
+makeUser('@deep', 'pass99', 'deepak').then(r => {
+    appendChat('@vtrix', '@deep', '@deep', 'Nope');
+})
+
+
 async function setRead(user_handle, user_handle_chatting_with) {
     if (!user_handle || !user_handle_chatting_with)
         return false
@@ -222,7 +245,7 @@ async function fetchContactPaneDetails(user_handle) {
     let doc = await chatTableModel.aggregate([
         {
             '$match': {
-                'user_handle': String(user_handle)
+                'user_handle': user_handle
             }
         }, {
             '$unwind': {
@@ -237,6 +260,10 @@ async function fetchContactPaneDetails(user_handle) {
                     ]
                 },
                 '_id': 0
+            }
+        }, {
+            '$sort': {
+                'last_message.chat_date_time': -1
             }
         }, {
             '$project': {
@@ -255,7 +282,7 @@ async function fetchContactPaneDetails(user_handle) {
         return new_doc;
     })
     let retdoc = await Promise.all(promises);
-    return retdoc
+    return retdoc;
 }
 
 async function getChatsBetween(user_handle1, user_handle2) {
@@ -275,7 +302,6 @@ async function getChatsBetween(user_handle1, user_handle2) {
     })
     return doc;
 }
-makeUser("Vtrix","vtx","VivekSony");
 module.exports = {
     sha512,
     makeUser,
@@ -284,6 +310,8 @@ module.exports = {
     updateSocketId,
     fetchSocketId,
     updateDpLink,
+    setOnline,
+    checkOnline,
     createChatObject,
     appendChat,
     setRead,

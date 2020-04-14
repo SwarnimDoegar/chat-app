@@ -1,9 +1,9 @@
 //For login
-let userlabel=document.getElementById("userlabel");
-let passlabel=document.getElementById("passlabel");
+let userlabel = document.getElementById("userlabel");
+let passlabel = document.getElementById("passlabel");
 
 
-document.getElementById("username").addEventListener("focus", () => {        
+document.getElementById("username").addEventListener("focus", () => {
     userlabel.style.top = 0;
     userlabel.style.opacity = 1;
 });
@@ -21,9 +21,9 @@ document.getElementById("user_pass").addEventListener("focusout", () => {
 });
 
 //For signup
-let userlabelSignup=document.getElementById("userlabelSignup");
-let passlabelSignup=document.getElementById("passlabelSignup");
-let handlelabel=document.getElementById("handlelabel");
+let userlabelSignup = document.getElementById("userlabelSignup");
+let passlabelSignup = document.getElementById("passlabelSignup");
+let handlelabel = document.getElementById("handlelabel");
 
 
 document.getElementById("userhandle").addEventListener("focus", () => {
@@ -53,19 +53,20 @@ document.getElementById("user_passSignup").addEventListener("focusout", () => {
 
 //To make signup apper
 
-let createAccLink=document.getElementById("createAccLink");
-let signup=document.querySelector(".signup");
+let createAccLink = document.getElementById("createAccLink");
+let signup = document.querySelector(".signup");
 
-if(window.innerWidth >= 1050){    
-    createAccLink.addEventListener( "click", ()=>{    
-        signup.style.width="35vw"
-        signup.style.margin="5vw"
+if (window.innerWidth >= 1050) {
+    createAccLink.addEventListener("click", () => {
+        signup.style.width = "35vw"
+        signup.style.margin = "5vw"
 
-    } );
+    });
 }
-else{
-    createAccLink.addEventListener( "click", ()=>{    
-        signup.style.height="fit-content"
-        signup.style.margin="5vw"        
-    } );
+else {
+    createAccLink.addEventListener("click", () => {
+        console.log("hello")
+        signup.style.height = "fit-content"
+        signup.style.margin = "5vw"
+    });
 }
