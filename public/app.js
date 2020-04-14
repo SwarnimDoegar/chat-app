@@ -1,13 +1,55 @@
-window.addEventListener('load', function () {
-    let socket = io(`http://${window.location.hostname}:3000`);
+window.addEventListener('load', async function () {
     let send = document.getElementById("sendBtn");
     let messageField = document.getElementById("messageInputField");
     let chatHistory = document.getElementById("chatHistory");
-    chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
-    window.onbeforeunload = function (e) {
-        fetch("/session/destroy").then(response => {
+    let socket = io(`http://${window.location.hostname}:3000`);
+
+
+    let userContacts = await this.fetch('/getContactPane').then((data) => data.json());
+    let contacts = document.getElementsByClassName("contact");
+    let user = await this.fetch('/getUser').then((data) => data.text());
+    let activeChat = null;
+    let chatsWithContacts = {};
+    for (let i = 0; i < contacts.length; i++) {
+        contacts[i].addEventListener("click", async function (e) {
+            const userId = userContacts[i].chatting_with.user_handle;
+            messageField.value = "";
+            activeChat = userId;
+            let chats;
+            if (!(userId in chatsWithContacts)) {
+                chats = await fetch(`/getChats/?u1=${user}&u2=${userId}`).then(data => data.json());
+                chatsWithContacts[userId] = chats.chatting_with[0].messages;
+            }
+            if (userId in chatsWithContacts) {
+                console.log(chatsWithContacts[userId])
+                let html = ejs.render(`<% chats.forEach((elem) => {%>
+                            <%if (elem.from == user){%>
+                                <div class="sender">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    <div class="read"><%=elem.read%></div>
+                                    </div>
+                                </div>
+                            <%}else{%>
+                                <div class="reciever">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    </div>
+                                </div>
+                            <%}%>
+                        <%}) %>`,
+                    { chats: chatsWithContacts[userId], user: user });
+                chatHistory.innerHTML = null;
+                chatHistory.innerHTML = html;
+            }
+
         })
     }
+
     //for ctrl+enter is send
     document.addEventListener('keydown', function (event) {
         if (event.ctrlKey && event.keyCode == 13) {
@@ -15,30 +57,88 @@ window.addEventListener('load', function () {
             chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
         }
     });
-    window.onload = function (e) {
 
-    }
-    socket.on('connect', function () {
-        send.addEventListener('click', function () {
-            let messageToBeSent = messageField.value;
+
+    socket.emit('establish', user, socket.id);
+    send.addEventListener('click', function () {
+        let message = messageField.value;
+
+        if (message !== "" && activeChat != null) {
             messageField.value = '';
-            if (messageToBeSent !== "") {
-                socket.emit('new_message', messageToBeSent);
-                chatHistory.innerHTML += `<div class="sender"><p class = "sender-message">${messageToBeSent}</p></div><br>`;
-                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+            let messageToBeSent = {
+                from: user,
+                to: activeChat,
+                message: message
             }
-        });
-        socket.on('message', (data) => {
-            if (data) {
-                chatHistory.innerHTML += `<div class="reciever">${data}</div><br>`;
-                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+            socket.emit('new_message', messageToBeSent);
+            chatsWithContacts[activeChat].push({
+                read: false,
+                from: user,
+                message: message,
+                chat_date_time: Date.now()
+            })
+            let html = ejs.render(`<% chats.forEach((elem) => {%>
+                            <%if (elem.from == user){%>
+                                <div class="sender">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    <div class="read"><%=elem.read%></div>
+                                    </div>
+                                </div>
+                            <%}else{%>
+                                <div class="reciever">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    </div>
+                                </div>
+                            <%}%>
+                        <%}) %>`,
+                { chats: chatsWithContacts[activeChat], user: user });
+            chatHistory.innerHTML = html;
+            chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+        }
+    });
+    socket.on('message', (data) => {
+        if (data) {
+            chatsWithContacts[data.from].push(data);
+            if (activeChat == data.from) {
+                let html = ejs.render(`<% chats.forEach((elem) => {%>
+                            <%if (elem.from == user){%>
+                                <div class="sender">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    <div class="read"><%=elem.read%></div>
+                                    </div>
+                                </div>
+                            <%}else{%>
+                                <div class="reciever">
+                                    <div class="message"><%=elem.message%></div>
+                                    <div class="timeAndRead">
+                                    <%let date= Date(elem.chat_date_time).toLocaleUpperCase().slice(16, 21)%>
+                                    <div class="time"><%=date%></div><br>
+                                    </div>
+                                </div>
+                            <%}%>
+                        <%}) %>`,
+                    { chats: chatsWithContacts[activeChat], user: user });
+                chatHistory.innerHTML = html;
             }
-        });
-    })
+            chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+        }
+    });
 })
 
-// let sender=document.querySelector(".sender");
-// let reciever=document.querySelector(".reciever");
-
-// sender.style.marginLeft  = 100-sender.style.widht;
-// sender.style.marginRight  = 100-receiver.style.widht;
+window.addEventListener('beforeunload', async function (e) {
+    e.preventDefault();
+    var request = new XMLHttpRequest();
+    request.open('GET', '/session/destroy');  // `false` makes the request synchronous
+    request.send(null);
+    return undefined;
+}
+)
