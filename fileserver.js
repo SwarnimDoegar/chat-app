@@ -22,8 +22,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
     secret: "76tfvbji876rdcdw234rfvbnjko",
-    resave: false,
-    saveUninitialized: true,
+    resave: true,
+    saveUninitialized: false,
     name: "user",
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
     unset: "destroy"
@@ -36,30 +36,25 @@ app.get('/', async (req, res) => {
         let handle = req.session.user ? req.session.user.user_handle : req.session.tempUser.user_handle;
         let isUserOnline = await mydb.checkOnline(handle);
         if (isUserOnline) {
-            let sockid = await mydb.fetchSocketId(handle);
-            if (sockid == 'offline') {
-                mydb.fetchContactPaneDetails(handle).then(async (result) => {
-                    let user = await mydb.getUserDetails(handle);
-                    if (result)
-                        return res.render("index", { contacts: result, user: user });
-                })
-            }
-            else {
-                req.session.destroy()
-                res.redirect('/login');
-            }
+            req.session.destroy(function (e) {
+                if (e) {
+                    console.log(e);
+                }
+                else {
+                    return res.redirect('/login');
+                }
+            })
         }
         else {
             mydb.fetchContactPaneDetails(handle).then(async (result) => {
                 let user = await mydb.getUserDetails(handle);
                 if (result)
-                    return res.render("index", { contacts: result, user: user });
+                    res.render("index", { contacts: result, user: user });
             })
         }
     }
     else {
-        req.session.destroy();
-        res.redirect("/login");
+        res.redirect('/login');
     }
 });
 
@@ -77,7 +72,6 @@ app.route('/login').get((req, res) => {
                 if (online) {
                     return res.send("You are already logged in from other device");
                 }
-                mydb.setOnline(reqBody.username, true);
                 if (reqBody.keepMeLoggedIn == 'on') {
                     req.session.user = result;
                     res.redirect("/");
@@ -117,17 +111,16 @@ app.get('/getChats', async (req, res) => {
     let chats = await mydb.getChatsBetween(req.query.u1, req.query.u2);
     res.send(chats);
 })
-app.get('/session/destroy', async (req, res) => {
+app.post('/session/destroy', async (req, res) => {
     if (req.session && req.session.tempUser) {
-        await mydb.updateSocketId(req.session.tempUser.user_handle, "offline")
-        await mydb.setOnline(req.session.tempUser.user_handle, false);
-        req.session.destroy();
-        res.clearCookie("user");
-
-    }
-    if (req.session && req.session.user) {
-        await mydb.updateSocketId(req.session.user.user_handle, "offline")
-        await mydb.setOnline(req.session.user.user_handle, false);
+        req.session.destroy(function (e) {
+            if (e) {
+                console.log(e)
+            }
+            else {
+                res.end();
+            }
+        })
     }
 })
 app.route('/logout').post(async (req, res) => {
@@ -139,11 +132,12 @@ app.route('/logout').post(async (req, res) => {
         await mydb.updateSocketId(req.session.tempUser.user_handle, "offline")
         await mydb.setOnline(req.session.tempUser.user_handle, false);
     }
-    req.session.destroy(function (err) {
-        if (err) {
-            return next(err);
-        } else {
-            return res.redirect('/login');
+    req.session.destroy(function (e) {
+        if (e) {
+            console.log(e);
+        }
+        else {
+            res.redirect('/login');
         }
     });
 

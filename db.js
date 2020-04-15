@@ -88,6 +88,12 @@ async function fetchSocketId(user_handle) {
         return doc[0].socket_id;
     }
 }
+async function setOfflineSocketId(socket_id) {
+    if (!socket_id)
+        return false;
+    await userCheckModel.findOneAndUpdate({ socket_id: String(socket_id) }, { socket_id: 'offline', online: false });
+    return true;
+}
 async function updateDpLink(user_handle, dp_link) {
     if (!user_handle || !dp_link)
         return false
@@ -117,7 +123,6 @@ async function checkOnline(user_handle) {
     if (doc)
         return doc.online;
 }
-
 
 /*Utility functions for chats collection*/
 
@@ -317,6 +322,7 @@ module.exports = {
     doesUserExist,
     updateSocketId,
     fetchSocketId,
+    setOfflineSocketId,
     updateDpLink,
     setOnline,
     checkOnline,

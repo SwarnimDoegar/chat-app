@@ -13,12 +13,11 @@ app.use(cors());
 app.use(router);
 
 io.on('connection', function (socket) {
-  socket.on('establish', function (user_handle, id) {
+  socket.on('establish', async function (user_handle, id) {
     mydb.updateSocketId(user_handle, id);
     mydb.setOnline(user_handle, true);
   })
   socket.on('new_message', async (data) => {
-    console.log(socket.id, "    ", typeof data.from);
     await mydb.appendChat(data.from, data.to, data.from, data.message);
     let details = await mydb.getUserDetails(data.to);
     if (details.socket_id != 'offline') {
@@ -28,7 +27,9 @@ io.on('connection', function (socket) {
         chat_date_time: Date.now()
       })
     }
-
+  })
+  socket.on('disconnect', async function () {
+    await mydb.setOfflineSocketId(socket.id);
   })
 
 });

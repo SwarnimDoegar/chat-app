@@ -10,6 +10,7 @@ window.addEventListener('load', async function () {
     let user = await this.fetch('/getUser').then((data) => data.text());
     let activeChat = null;
     let chatsWithContacts = {};
+    chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
     for (let i = 0; i < contacts.length; i++) {
         contacts[i].addEventListener("click", async function (e) {
             const userId = userContacts[i].chatting_with.user_handle;
@@ -21,7 +22,6 @@ window.addEventListener('load', async function () {
                 chatsWithContacts[userId] = chats.chatting_with[0].messages;
             }
             if (userId in chatsWithContacts) {
-                console.log(chatsWithContacts[userId])
                 let html = ejs.render(`<% chats.forEach((elem) => {%>
                             <%if (elem.from == user){%>
                                 <div class="sender">
@@ -134,11 +134,7 @@ window.addEventListener('load', async function () {
     });
 })
 
-window.addEventListener('beforeunload', async function (e) {
-    e.preventDefault();
-    var request = new XMLHttpRequest();
-    request.open('GET', '/session/destroy');  // `false` makes the request synchronous
-    request.send(null);
-    return undefined;
-}
-)
+window.addEventListener('beforeunload', function (e) {
+    this.navigator.sendBeacon('/session/destroy', "destroy")
+})
+
