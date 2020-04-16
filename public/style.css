@@ -77,11 +77,10 @@
 
 .searchBar{
     margin: 10px;
-   display: flex;
+    display: flex;
     flex-direction: row;
     padding: 2px;
     height: 50px;
-    background: rgb(211, 211, 211);
     width: 95%;
     font-family: 'Roboto', sans-serif;
     border-radius: 50px;
@@ -91,8 +90,6 @@
     background: rgb(211, 211, 211);
     border-radius: 50px;
     padding:20px;
-    margin-left: 20px;
-    margin-top: 20px;
     border: none;
     width: 75%;
     height: 50px;
@@ -103,7 +100,6 @@
 #searchButton{
     cursor: pointer;
     border-radius: 50%;
-    margin-top: 20px;
     border: none;
     width: 52px;
     height:50px;
@@ -221,7 +217,7 @@
 }
 .sender {
     background: #8098cc;
-    padding: 12px;
+    padding: 0px 12px 0px 12px;
     border-radius: 35px 0px 35px 35px;
     margin: 10px 40px 5px auto;
     width:max-content;
@@ -236,7 +232,7 @@
     border-radius: 0px 35px 35px 35px;
     background: #bfd6f6 ;
     margin:10px 0 5px 40px;
-    padding: 12px;
+    padding: 0px 12px 0px 12px;
     width: max-content;
     max-width: 30%;
     min-width: 150px;
@@ -247,14 +243,15 @@
 
 .message{
     font-size: 0.95rem;
-    padding: 4px;
+    padding-left: 10px;
+    /* padding: 4px; */
 }
 
 .timeAndRead{
     position: absolute;
     font-size: 0.8rem;
     right: 11%;
-    bottom: 4%;
+    bottom: 5%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -263,7 +260,7 @@
 }
 
 .time ,.read{
-    padding: 4px;
+    padding-right: 4px;
 }
 
 textarea {
@@ -285,6 +282,8 @@ textarea {
 #messageInputField{
     margin-bottom: 5px;
     padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
     font-size: 1.2rem;
     width: 90%;
     border-radius: 50px;

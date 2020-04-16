@@ -10,13 +10,10 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "js-sha512": "^0.8.0",
-    "mongodb": "^3.5.4",
     "mongoose": "^5.9.6",
     "nodemon": "^2.0.2",
     "querystring": "^0.2.0",
-    "randomstring": "^1.1.5",
     "socket.io": "^2.3.0",
-    "socket.io-redis": "^5.2.0",
     "url": "^0.11.0"
   },
   "scripts": {
@@ -47,13 +44,13 @@
   "main": "fileserver.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imabp/chat-app.git"
+    "url": "git+https://github.com/SwarnimDoegar/chat-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/imabp/chat-app/issues"
+    "url": "https://github.com/SwarnimDoegar/chat-app/issues"
   },
-  "homepage": "https://github.com/imabp/chat-app#readme"
+  "homepage": "https://github.com/SwarnimDoegar/chat-app#readme"
 }
